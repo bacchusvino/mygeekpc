@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyGeekMac Remote Support Setup - Client consent and diagnostic agreement">
+    <title>Remote Support Setup | MyGeekMac</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0066cc;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .accessibility-options {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .accessibility-options label {
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .accessibility-options select {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        /* OpenDyslexic font */
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff');
+            font-weight: normal;
+        }
+        
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
+            font-weight: bold;
+        }
+        
+        body.font-opendyslexic {
+            font-family: 'OpenDyslexic', sans-serif;
+        }
+        
+        body.font-arial {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        body.font-verdana {
+            font-family: Verdana, Geneva, sans-serif;
+        }
+        
+        body.font-comic {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+        
+        .card h2 {
+            color: #0066cc;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .terms-box {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 30px;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        .terms-box h3 {
+            color: #0066cc;
+            margin: 30px 0 15px 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+        
+        .terms-box h3:first-child {
+            margin-top: 0;
+        }
+        
+        .terms-box p {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .terms-box ul {
+            margin: 15px 0 20px 30px;
+        }
+        
+        .terms-box li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .terms-box .highlight {
+            background: #e8f4fc;
+            border-left: 4px solid #0066cc;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .terms-box .warning-box {
+            background: #fff8e6;
+            border-left: 4px solid #f0a500;
+            padding: 15px 20px;
+            margin: 20px 0;
+            color: #333;
+        }
+        
+        .terms-box .warning-box strong {
+            color: #c78500;
+        }
+        
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #888;
+            transition: all 0.3s;
+        }
+        
+        .step.active {
+            background: #0066cc;
+            color: #fff;
+        }
+        
+        .step.completed {
+            background: #28a745;
+            color: #fff;
+        }
+        
+        .step-line {
+            width: 60px;
+            height: 3px;
+            background: #ddd;
+            align-self: center;
+        }
+        
+        .step-line.completed {
+            background: #28a745;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 18px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid #eee;
+            transition: all 0.2s;
+        }
+        
+        .checkbox-group:hover {
+            background: #f0f7ff;
+            border-color: #0066cc;
+        }
+        
+        .checkbox-group:focus-within {
+            outline: 3px solid #0066cc;
+            outline-offset: 2px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #0066cc;
+        }
+        
+        .checkbox-group label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .checkbox-group label strong {
+            color: #000;
+        }
+        
+        /* Signature */
+        .signature-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .signature-section label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .signature-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            background: #fff;
+            border: 2px solid #0066cc;
+            border-radius: 6px;
+            color: #000;
+        }
+        
+        .signature-input::placeholder {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.95rem;
+            color: #999;
+        }
+        
+        .date-display {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: #0066cc;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: #0055aa;
+        }
+        
+        .btn-primary:disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: #fff;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+        
+        .btn-print {
+            background: #fff;
+            color: #0066cc;
+            border: 2px solid #0066cc;
+        }
+        
+        .btn-print:hover {
+            background: #f0f7ff;
+        }
+        
+        /* Download Section */
+        .download-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .download-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .instructions {
+            background: #e8f4fc;
+            border: 1px solid #b8daef;
+            border-radius: 6px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .instructions h4 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            margin-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .warning {
+            background: #fff8e6;
+            border: 1px solid #f0d78c;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .warning strong {
+            color: #c78500;
+        }
+        
+        .record-info {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        
+        .record-info strong {
+            color: #2e7d32;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: #fff;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            
+            .btn, .step-indicator {
+                display: none;
+            }
+            
+            .terms-box {
+                max-height: none;
+                overflow: visible;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden form for Netlify Forms detection -->
+    <form name="consent-agreement" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="signature" />
+        <input type="text" name="timestamp" />
+        <input type="text" name="agree-read" />
+        <input type="text" name="agree-backup" />
+        <input type="text" name="agree-diagnostic" />
+        <input type="text" name="agree-revoke" />
+        <input type="text" name="user-agent" />
+        <input type="text" name="bot-field" />
+    </form>
+    
+    <div class="container">
+        <div class="header">
+            <h1>MyGeekMac</h1>
+            <p>Remote Support Setup</p>
+            
+            <div class="accessibility-options">
+                <label for="fontSelect">Font: </label>
+                <select id="fontSelect" onchange="changeFont(this.value)" aria-label="Select font for easier reading">
+                    <option value="default">Default</option>
+                    <option value="opendyslexic">OpenDyslexic</option>
+                    <option value="arial">Arial</option>
+                    <option value="verdana">Verdana</option>
+                    <option value="comic">Comic Sans</option>
+                </select>
+                
+                <label for="sizeSelect" style="margin-left: 15px;">Size: </label>
+                <select id="sizeSelect" onchange="changeSize(this.value)" aria-label="Select text size">
+                    <option value="16">Normal</option>
+                    <option value="18">Large</option>
+                    <option value="20">X-Large</option>
+                    <option value="22">XX-Large</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step-line" id="line1"></div>
+            <div class="step" id="step2">2</div>
+            <div class="step-line" id="line2"></div>
+            <div class="step" id="step3">3</div>
+        </div>
+        
+        <!-- Page 1: Terms of Service -->
+        <div class="page active" id="page1" role="main" aria-label="Step 1: Read Agreement">
+            <div class="card">
+                <h2>Remote Diagnostic Services – Client Consent & Responsibility Agreement</h2>
+                <p style="margin-bottom: 15px; color: #666;">Please read the following terms carefully before proceeding.</p>
+                
+                <div class="terms-box" role="document" aria-label="Remote Diagnostic Services Agreement" tabindex="0">
+                    <h3>1. Purpose of This Service</h3>
+                    <p>This remote diagnostic service is designed to identify hardware, software, configuration, and performance issues on your computer system.</p>
+                    <p class="highlight">It is diagnostic in nature, not a repair, data recovery, or backup service unless explicitly agreed to in writing.</p>
+                    
+                    <h3>2. Scope of Work (What This Is)</h3>
+                    <p>By approving this service, you understand that the technician will:</p>
+                    <ul>
+                        <li>Collect system information (hardware, OS version, storage health, logs, running services)</li>
+                        <li>Analyze the data to identify likely causes of problems</li>
+                        <li>Provide a written summary of findings and recommended next steps</li>
+                    </ul>
+                    <p><strong>No changes, repairs, removals, updates, or optimizations will be performed without your explicit approval.</strong></p>
+                    
+                    <h3>3. What This Service Is <em>Not</em></h3>
+                    <p>Unless separately contracted, this service does not include:</p>
+                    <ul>
+                        <li>Data backup or data recovery</li>
+                        <li>File-level review of personal documents</li>
+                        <li>Malware removal or system cleaning</li>
+                        <li>Operating system reinstallation</li>
+                        <li>Hardware replacement</li>
+                        <li>Guaranteed resolution of all issues</li>
+                    </ul>
+                    <p class="highlight">Diagnostics identify problems; they do not magically fix them. (Sadly.)</p>
+                    
+                    <h3>4. Backup Responsibility (Very Important)</h3>
+                    <p><strong>You acknowledge and agree that:</strong></p>
+                    <ul>
+                        <li>You are solely responsible for ensuring your data is backed up before diagnostics begin.</li>
+                        <li>Remote diagnostics may reveal existing issues (disk failure, corruption, malware, misconfiguration) that already threaten your data.</li>
+                        <li>The technician is not responsible for data loss, corruption, or system failure resulting from:
+                            <ul>
+                                <li>Pre-existing conditions</li>
+                                <li>Hardware failure</li>
+                                <li>Software defects</li>
+                                <li>Operating system instability</li>
+                                <li>Prior malware or encryption damage</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <div class="warning-box">
+                        <strong>Optional Backup Service</strong><br><br>
+                        If you want assistance backing up your system:
+                        <ul>
+                            <li>Backup services must be requested separately</li>
+                            <li>Backup services may require an on-site visit</li>
+                            <li>Backup services are billed separately and are not included in remote diagnostics</li>
+                        </ul>
+                        <strong>No backup requested = no backup performed.</strong>
+                    </div>
+                    
+                    <h3>5. Known Risks & "Horror Stories" (Transparency Section)</h3>
+                    <p>You understand that computers sometimes fail during or shortly after diagnostics due to issues such as:</p>
+                    <ul>
+                        <li>Drives failing under read stress (especially aging HDDs/SSDs)</li>
+                        <li>Systems crashing due to thermal, memory, or power issues</li>
+                        <li>Operating systems revealing corruption when logs are accessed</li>
+                        <li>Malware or ransomware activating when disturbed</li>
+                        <li>Previously hidden hardware faults surfacing</li>
+                    </ul>
+                    <p>These risks exist regardless of who is diagnosing the system.</p>
+                    <p class="highlight">Diagnostics do not cause these problems — they expose them.</p>
+                    
+                    <h3>6. Remote Access & Security Consent</h3>
+                    <p>By approving this service, you consent to:</p>
+                    <ul>
+                        <li>Temporary remote access using secure tools (e.g., encrypted SSH or equivalent)</li>
+                        <li>Automated scripts collecting system-level information only</li>
+                        <li>No intentional access to personal documents, photos, emails, or browser content</li>
+                    </ul>
+                    <p><strong>Access can be revoked by you at any time.</strong></p>
+                    
+                    <h3>7. AI-Assisted Analysis Disclosure</h3>
+                    <p>You acknowledge that:</p>
+                    <ul>
+                        <li>Diagnostic results may be reviewed using AI-assisted analysis tools</li>
+                        <li>AI is used to summarize logs, identify patterns, and suggest likely causes</li>
+                        <li>Final decisions, recommendations, and actions remain human-reviewed</li>
+                    </ul>
+                    <p><strong>AI does not make changes to your system.</strong></p>
+                    
+                    <h3>8. No Guarantee Clause</h3>
+                    <p>You understand and agree that:</p>
+                    <ul>
+                        <li>Diagnostics do not guarantee problem resolution</li>
+                        <li>Some issues may require on-site service or hardware replacement</li>
+                        <li>Some systems may be beyond economical repair</li>
+                    </ul>
+                    <p class="highlight">You are paying for expert analysis, not a promise of resurrection.</p>
+                    
+                    <h3>9. Limitation of Liability</h3>
+                    <p>To the maximum extent permitted by law:</p>
+                    <ul>
+                        <li>The technician is not liable for data loss, downtime, or consequential damages</li>
+                        <li>Liability is limited to the amount paid for the diagnostic service itself</li>
+                    </ul>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="nextPage(1)">I Have Read the Terms →</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page 2: Consent & Signature -->
+        <div class="page" id="page2" role="main" aria-label="Step 2: Sign Agreement">
+            <div class="card">
+                <h2>Client Acknowledgment & Electronic Signature</h2>
+                <p style="margin-bottom: 20px; color: #666;">Please confirm your agreement and provide your electronic signature.</p>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree1" onchange="checkForm()">
+                    <label for="agree1">I have <strong>read and understood</strong> the Remote Diagnostic Services Agreement above.</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree2" onchange="checkForm()">
+                    <label for="agree2">I <strong>accept responsibility for backups</strong> unless otherwise contracted.</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree3" onchange="checkForm()">
+                    <label for="agree3">I <strong>approve the diagnostic process</strong> as described, including temporary remote access.</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree4" onchange="checkForm()">
+                    <label for="agree4">I understand that <strong>access can be revoked at any time</strong> and that I can request removal.</label>
+                </div>
+                
+                <div class="signature-section">
+                    <label for="signature">Electronic Signature (Type your full legal name):</label>
+                    <input type="text" id="signature" class="signature-input" placeholder="Type your full name here" oninput="checkForm()">
+                    <p class="date-display">Date: <span id="currentDate"></span></p>
+                </div>
+                
+                <div class="record-info">
+                    <strong>📝 Record Keeping:</strong> By typing your name above, you are providing a legally binding electronic signature under the ESIGN Act. A timestamped record of this consent will be stored with your diagnostic results.
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="prevPage(2)">← Back</button>
+                    <button class="btn btn-success" id="signBtn" onclick="signAndProceed()" disabled>Sign & Continue →</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page 3: Download -->
+        <div class="page" id="page3" role="main" aria-label="Step 3: Download Setup File">
+            <div class="card">
+                <div class="download-section">
+                    <div class="download-icon">✅</div>
+                    <h2>Agreement Signed Successfully!</h2>
+                    <p style="margin: 15px 0; color: #666;">Thank you, <strong id="clientName"></strong>. You may now download the setup file.</p>
+                    
+                    <a href="MyGeekMac_Setup.bat" download class="btn btn-success" style="display: inline-block; margin-top: 20px; font-size: 1.2rem; padding: 20px 50px;">
+                        ⬇️ Download Setup File
+                    </a>
+                    
+                    <div class="instructions">
+                        <h4>What to do next:</h4>
+                        <ol>
+                            <li>Open your <strong>Downloads</strong> folder</li>
+                            <li>Double-click <strong>MyGeekMac_Setup.bat</strong></li>
+                            <li>Click <strong>"Yes"</strong> when Windows asks for permission</li>
+                            <li>Wait for setup to complete (~30 seconds)</li>
+                            <li>Read the connection information to Josh</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="warning">
+                        <strong>⚠️ Note:</strong> This setup file is for use during your scheduled support session with MyGeekMac only. The file configures your computer for secure remote access via Tailscale VPN.
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-print" onclick="window.print()">🖨️ Print Signed Agreement</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // Font selector
+        function changeFont(font) {
+            document.body.classList.remove('font-opendyslexic', 'font-arial', 'font-verdana', 'font-comic');
+            if (font !== 'default') {
+                document.body.classList.add('font-' + font);
+            }
+            localStorage.setItem('preferredFont', font);
+        }
+        
+        // Size selector
+        function changeSize(size) {
+            document.body.style.fontSize = size + 'px';
+            localStorage.setItem('preferredSize', size);
+        }
+        
+        // Load saved preferences
+        (function() {
+            const savedFont = localStorage.getItem('preferredFont');
+            const savedSize = localStorage.getItem('preferredSize');
+            if (savedFont) {
+                document.getElementById('fontSelect').value = savedFont;
+                changeFont(savedFont);
+            }
+            if (savedSize) {
+                document.getElementById('sizeSelect').value = savedSize;
+                changeSize(savedSize);
+            }
+        })();
+        
+        function checkForm() {
+            const agree1 = document.getElementById('agree1').checked;
+            const agree2 = document.getElementById('agree2').checked;
+            const agree3 = document.getElementById('agree3').checked;
+            const agree4 = document.getElementById('agree4').checked;
+            const signature = document.getElementById('signature').value.trim();
+            
+            const signBtn = document.getElementById('signBtn');
+            signBtn.disabled = !(agree1 && agree2 && agree3 && agree4 && signature.length >= 2);
+        }
+        
+        function nextPage(current) {
+            document.getElementById('page' + current).classList.remove('active');
+            document.getElementById('page' + (current + 1)).classList.add('active');
+            
+            document.getElementById('step' + current).classList.remove('active');
+            document.getElementById('step' + current).classList.add('completed');
+            document.getElementById('line' + current).classList.add('completed');
+            document.getElementById('step' + (current + 1)).classList.add('active');
+            
+            window.scrollTo(0, 0);
+        }
+        
+        function prevPage(current) {
+            document.getElementById('page' + current).classList.remove('active');
+            document.getElementById('page' + (current - 1)).classList.add('active');
+            
+            document.getElementById('step' + current).classList.remove('active');
+            document.getElementById('step' + (current - 1)).classList.remove('completed');
+            document.getElementById('step' + (current - 1)).classList.add('active');
+            document.getElementById('line' + (current - 1)).classList.remove('completed');
+            
+            window.scrollTo(0, 0);
+        }
+        
+        function signAndProceed() {
+            const signature = document.getElementById('signature').value.trim();
+            document.getElementById('clientName').textContent = signature;
+            
+            // Build consent record
+            const timestamp = new Date().toISOString();
+            const record = {
+                signature: signature,
+                timestamp: timestamp,
+                userAgent: navigator.userAgent,
+                agreements: {
+                    readAndUnderstood: true,
+                    backupResponsibility: true,
+                    diagnosticApproval: true,
+                    revokeUnderstanding: true
+                }
+            };
+            
+            // Store locally as backup
+            localStorage.setItem('mygeek_agreement_' + Date.now(), JSON.stringify(record));
+            
+            // Send to Netlify Forms
+            const formData = new FormData();
+            formData.append('form-name', 'consent-agreement');
+            formData.append('signature', signature);
+            formData.append('timestamp', timestamp);
+            formData.append('agree-read', 'yes');
+            formData.append('agree-backup', 'yes');
+            formData.append('agree-diagnostic', 'yes');
+            formData.append('agree-revoke', 'yes');
+            formData.append('user-agent', navigator.userAgent);
+            
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(() => console.log('Consent submitted to Netlify'))
+            .catch((error) => console.error('Consent submission error:', error));
+            
+            nextPage(2);
+        }
+    </script>
+</body>
+</html>
