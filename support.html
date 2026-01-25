@@ -469,6 +469,101 @@
                 width: 100%;
                 text-align: center;
             }
+            
+            .install-tabs {
+                flex-direction: column;
+            }
+        }
+        
+        /* Install Option Tabs */
+        .install-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            border: 2px solid #0066cc;
+            background: #fff;
+            color: #0066cc;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn:hover {
+            background: #f0f7ff;
+        }
+        
+        .tab-btn.active {
+            background: #0066cc;
+            color: #fff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .code-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px 20px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .code-box code {
+            flex: 1;
+            word-break: break-all;
+        }
+        
+        .btn-copy {
+            padding: 8px 15px;
+            background: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .btn-copy:hover {
+            background: #0055aa;
+        }
+        
+        .revoke-section {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .revoke-section h4 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .revoke-section p {
+            color: #666;
+            font-size: 0.95rem;
         }
     </style>
 </head>
@@ -675,30 +770,89 @@
         </div>
         
         <!-- Page 3: Download -->
-        <div class="page" id="page3" role="main" aria-label="Step 3: Download Setup File">
+        <div class="page" id="page3" role="main" aria-label="Step 3: Install Setup">
             <div class="card">
                 <div class="download-section">
                     <div class="download-icon">✅</div>
                     <h2>Agreement Signed Successfully!</h2>
-                    <p style="margin: 15px 0; color: #666;">Thank you, <strong id="clientName"></strong>. You may now download the setup file.</p>
+                    <p style="margin: 15px 0; color: #666;">Thank you, <strong id="clientName"></strong>. Choose your preferred installation method below.</p>
                     
-                    <a href="MyGeekMac_Setup.bat" download class="btn btn-success" style="display: inline-block; margin-top: 20px; font-size: 1.2rem; padding: 20px 50px;">
-                        ⬇️ Download Setup File
-                    </a>
+                    <!-- Install Options Tabs -->
+                    <div class="install-tabs">
+                        <button class="tab-btn active" onclick="showTab('easiest')">Easiest (Recommended)</button>
+                        <button class="tab-btn" onclick="showTab('oneliner')">One-Liner</button>
+                        <button class="tab-btn" onclick="showTab('manual')">Manual Download</button>
+                    </div>
                     
-                    <div class="instructions">
-                        <h4>What to do next:</h4>
-                        <ol>
-                            <li>Open your <strong>Downloads</strong> folder</li>
-                            <li>Double-click <strong>MyGeekMac_Setup.bat</strong></li>
-                            <li>Click <strong>"Yes"</strong> when Windows asks for permission</li>
-                            <li>Wait for setup to complete (~30 seconds)</li>
-                            <li>Read the connection information to Josh</li>
-                        </ol>
+                    <!-- Tab: Easiest -->
+                    <div class="tab-content active" id="tab-easiest">
+                        <a href="install.bat" download class="btn btn-success" style="display: inline-block; margin-top: 20px; font-size: 1.2rem; padding: 20px 50px;">
+                            ⬇️ Download One-Click Installer
+                        </a>
+                        
+                        <div class="instructions">
+                            <h4>What to do:</h4>
+                            <ol>
+                                <li>Open your <strong>Downloads</strong> folder</li>
+                                <li>Double-click <strong>install.bat</strong></li>
+                                <li>Click <strong>"Yes"</strong> when Windows asks for permission</li>
+                                <li>Wait for setup to complete (~30-60 seconds)</li>
+                                <li>Read the connection info to Josh when prompted</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab: One-Liner -->
+                    <div class="tab-content" id="tab-oneliner">
+                        <div class="instructions" style="margin-top: 20px;">
+                            <h4>For advanced users - paste this in PowerShell (Run as Administrator):</h4>
+                            <div class="code-box">
+                                <code id="oneliner-code">irm https://raw.githubusercontent.com/bacchusvino/mygeekpc/main/MyGeekMac_Setup.ps1 | iex</code>
+                                <button class="btn-copy" onclick="copyCode()">📋 Copy</button>
+                            </div>
+                            <ol style="margin-top: 15px;">
+                                <li>Press <strong>Win + X</strong>, then click <strong>"Terminal (Admin)"</strong> or <strong>"PowerShell (Admin)"</strong></li>
+                                <li>Click <strong>"Yes"</strong> when Windows asks for permission</li>
+                                <li>Paste the command above (right-click or Ctrl+V)</li>
+                                <li>Press <strong>Enter</strong> and wait for setup to complete</li>
+                                <li>Read the connection info to Josh when prompted</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab: Manual -->
+                    <div class="tab-content" id="tab-manual">
+                        <div style="margin-top: 20px;">
+                            <p style="margin-bottom: 15px;">Download both files to the same folder:</p>
+                            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                                <a href="MyGeekMac_Setup.bat" download class="btn btn-primary">⬇️ Setup Launcher (.bat)</a>
+                                <a href="MyGeekMac_Setup.ps1" download class="btn btn-primary">⬇️ Setup Script (.ps1)</a>
+                            </div>
+                        </div>
+                        
+                        <div class="instructions">
+                            <h4>What to do:</h4>
+                            <ol>
+                                <li>Download <strong>both</strong> files above to your Downloads folder</li>
+                                <li>Double-click <strong>MyGeekMac_Setup.bat</strong></li>
+                                <li>Click <strong>"Yes"</strong> when Windows asks for permission</li>
+                                <li>Wait for setup to complete (~30-60 seconds)</li>
+                                <li>Read the connection info to Josh when prompted</li>
+                            </ol>
+                        </div>
                     </div>
                     
                     <div class="warning">
-                        <strong>⚠️ Note:</strong> This setup file is for use during your scheduled support session with MyGeekMac only. The file configures your computer for secure remote access via Tailscale VPN.
+                        <strong>⚠️ Note:</strong> This setup configures your computer for secure remote access via Tailscale VPN. Access is restricted to Josh's devices only and can be revoked at any time.
+                    </div>
+                    
+                    <!-- Revoke Access Section -->
+                    <div class="revoke-section">
+                        <h4>🔒 Want to revoke access later?</h4>
+                        <p>Download and run the removal script to completely disable remote access:</p>
+                        <a href="MyGeekMac_Remove.bat" download class="btn btn-secondary" style="margin-top: 10px;">
+                            ⬇️ Download Removal Script
+                        </a>
                     </div>
                     
                     <div style="margin-top: 25px;">
@@ -823,6 +977,36 @@
             .catch((error) => console.error('Consent submission error:', error));
             
             nextPage(2);
+        }
+        
+        // Tab switching for install options
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Copy one-liner to clipboard
+        function copyCode() {
+            const code = document.getElementById('oneliner-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.btn-copy');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#0066cc';
+                }, 2000);
+            });
         }
     </script>
 </body>
