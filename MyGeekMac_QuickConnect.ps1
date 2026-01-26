@@ -12,7 +12,7 @@ $ErrorActionPreference = "Stop"
 # ============================================================================
 # Generate auth key at: https://login.tailscale.com/admin/settings/keys
 # Settings: Reusable, 90 days, Pre-approved
-$TailscaleAuthKey = 'tskey-auth-kzpLqhXK4z11CNTRL-yNcaUw7wYg7ufzM7TVoLg7pG9F6zc9Z8F'
+$TailscaleAuthKey = $env:MYGEEK_TS_KEY  # Set via environment or pass as parameter
 
 $SupportPublicKey = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1+MS+neCBvKqIe1r josh@mygeekmac.com'
 $FirewallRuleName = 'OpenSSH-Server-Tailscale-MyGeekMac'
