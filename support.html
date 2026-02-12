@@ -779,13 +779,13 @@
                     
                     <!-- Install Options Tabs -->
                     <div class="install-tabs">
-                        <button class="tab-btn active" onclick="showTab('easiest')">Easiest (Recommended)</button>
-                        <button class="tab-btn" onclick="showTab('oneliner')">One-Liner</button>
+                        <button class="tab-btn active" onclick="showTab('oneliner')">Recommended</button>
+                        <button class="tab-btn" onclick="showTab('easiest')">One-Click Download</button>
                         <button class="tab-btn" onclick="showTab('manual')">Manual Download</button>
                     </div>
                     
                     <!-- Tab: Easiest -->
-                    <div class="tab-content active" id="tab-easiest">
+                    <div class="tab-content" id="tab-easiest">
                         <a href="install.bat" download class="btn btn-success" style="display: inline-block; margin-top: 20px; font-size: 1.2rem; padding: 20px 50px;">
                             ⬇️ Download One-Click Installer
                         </a>
@@ -795,17 +795,21 @@
                             <ol>
                                 <li>Open your <strong>Downloads</strong> folder</li>
                                 <li>Double-click <strong>install.bat</strong></li>
+                                <li>If Windows SmartScreen pops up, click <strong>"More info"</strong> then <strong>"Run anyway"</strong></li>
                                 <li>Click <strong>"Yes"</strong> when Windows asks for permission</li>
                                 <li>Wait for setup to complete (~30-60 seconds)</li>
                                 <li>Read the connection info to Josh when prompted</li>
                             </ol>
                         </div>
+                        <div class="warning">
+                            <strong>Windows blocking it?</strong> SmartScreen may block downloaded files. If this happens, use the <strong>Recommended</strong> tab instead — it bypasses this issue entirely.
+                        </div>
                     </div>
                     
                     <!-- Tab: One-Liner -->
-                    <div class="tab-content" id="tab-oneliner">
+                    <div class="tab-content active" id="tab-oneliner">
                         <div class="instructions" style="margin-top: 20px;">
-                            <h4>For advanced users - paste this in PowerShell (Run as Administrator):</h4>
+                            <h4>Paste this one command in PowerShell — that's it!</h4>
                             <div class="code-box">
                                 <code id="oneliner-code">irm https://raw.githubusercontent.com/bacchusvino/mygeekpc/main/MyGeekMac_Setup.ps1 | iex</code>
                                 <button class="btn-copy" onclick="copyCode()">📋 Copy</button>

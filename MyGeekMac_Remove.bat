@@ -12,7 +12,7 @@ if %errorlevel% neq 0 (
 )
 
 powershell -ExecutionPolicy Bypass -Command ^
-$KeyFingerprint = 'AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1\+MS\+neCBvKqIe1r'; ^
+$KeyFingerprints = @('AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1\+MS\+neCBvKqIe1r','AAAAC3NzaC1lZDI1NTE5AAAAIDioCcFWEMgkKBZgs5D320aLqASzRWlt8vuz\+HiQ3GSY'); ^
 $FirewallRuleName = 'OpenSSH-Server-Tailscale-MyGeekMac'; ^
 $FailCount = 0; ^
 Write-Host ''; ^
@@ -25,7 +25,7 @@ $keyPath = 'C:\ProgramData\ssh\administrators_authorized_keys'; ^
 try { ^
     if (Test-Path $keyPath) { ^
         $content = Get-Content $keyPath; ^
-        $newContent = $content ^| Where-Object { $_ -notmatch $KeyFingerprint }; ^
+        $newContent = $content ^| Where-Object { $line = $_; -not ($KeyFingerprints ^| Where-Object { $line -match $_ }) }; ^
         if ($newContent) { ^
             Set-Content -Path $keyPath -Value $newContent -Encoding ASCII -ErrorAction Stop ^
         } else { ^

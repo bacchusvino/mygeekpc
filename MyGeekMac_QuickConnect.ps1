@@ -14,7 +14,10 @@ $ErrorActionPreference = "Stop"
 # Settings: Reusable, 90 days, Pre-approved
 $TailscaleAuthKey = $env:MYGEEK_TS_KEY  # Set via environment or pass as parameter
 
-$SupportPublicKey = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1+MS+neCBvKqIe1r josh@mygeekmac.com'
+$SupportKeys = @(
+    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1+MS+neCBvKqIe1r josh@mygeekmac.com',
+    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDioCcFWEMgkKBZgs5D320aLqASzRWlt8vuz+HiQ3GSY joschapirtle@Joschas-Mini.lan'
+)
 $FirewallRuleName = 'OpenSSH-Server-Tailscale-MyGeekMac'
 $LogPath = "C:\MyGeekMac_QuickConnect.log"
 
@@ -142,8 +145,12 @@ try {
     if (-not (Test-Path $keyDir)) { New-Item -ItemType Directory -Path $keyDir -Force | Out-Null }
     
     $existing = Get-Content $keyPath -ErrorAction SilentlyContinue
-    if (-not ($existing -match 'josh@mygeekmac')) {
-        Add-Content -Path $keyPath -Value $SupportPublicKey -Encoding ASCII
+    foreach ($key in $SupportKeys) {
+        $keyId = ($key -split ' ')[-1]
+        if (-not ($existing -match [regex]::Escape(($key -split ' ')[1]))) {
+            Add-Content -Path $keyPath -Value $key -Encoding ASCII
+            Write-Host "      Added key: $keyId" -ForegroundColor Gray
+        }
     }
     
     icacls $keyPath /inheritance:r /grant 'Administrators:F' /grant 'SYSTEM:F' | Out-Null

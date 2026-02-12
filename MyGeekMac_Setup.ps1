@@ -5,8 +5,14 @@
 # ============================================================================
 
 $ErrorActionPreference = "Stop"
-$SupportPublicKey = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1+MS+neCBvKqIe1r josh@mygeekmac.com'
-$KeyFingerprint = 'AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1\+MS\+neCBvKqIe1r'
+$SupportKeys = @(
+    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1+MS+neCBvKqIe1r josh@mygeekmac.com',
+    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDioCcFWEMgkKBZgs5D320aLqASzRWlt8vuz+HiQ3GSY joschapirtle@Joschas-Mini.lan'
+)
+$KeyFingerprints = @(
+    'AAAAC3NzaC1lZDI1NTE5AAAAIGrmk/vkk3GuNVBC5M6VxpxBMPzc1\+MS\+neCBvKqIe1r',
+    'AAAAC3NzaC1lZDI1NTE5AAAAIDioCcFWEMgkKBZgs5D320aLqASzRWlt8vuz\+HiQ3GSY'
+)
 $FirewallRuleName = 'OpenSSH-Server-Tailscale-MyGeekMac'
 $LogPath = "$env:TEMP\MyGeekMac_Setup.log"
 $FailCount = 0
@@ -149,13 +155,23 @@ try {
         New-Item -ItemType Directory -Path $keyDir -Force | Out-Null
     }
     
-    # Check if key already exists (match on key fingerprint, not comment)
+    # Check and add each support key
     $existing = Get-Content $keyPath -ErrorAction SilentlyContinue
-    if ($existing -and $existing -match $KeyFingerprint) {
-        Write-OK "Support key already installed"
+    $keysAdded = 0
+    foreach ($i in 0..($SupportKeys.Count - 1)) {
+        $key = $SupportKeys[$i]
+        $fp = $KeyFingerprints[$i]
+        if ($existing -and $existing -match $fp) {
+            Write-Host "  Key $($i+1) already installed" -ForegroundColor Gray
+        } else {
+            Add-Content -Path $keyPath -Value $key -Encoding ASCII -ErrorAction Stop
+            $keysAdded++
+        }
+    }
+    if ($keysAdded -gt 0) {
+        Write-OK "$keysAdded support key(s) added"
     } else {
-        Add-Content -Path $keyPath -Value $SupportPublicKey -Encoding ASCII -ErrorAction Stop
-        Write-OK "Support key added"
+        Write-OK "All support keys already installed"
     }
     
     # Set permissions (critical for SSH to accept the key)
