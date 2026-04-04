@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E4Q29203RC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E4Q29203RC');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | MyGeekPC - Josh Pirtle</title>
@@ -106,7 +114,9 @@
                 <!-- Contact Form -->
                 <div>
                     <h2 style="margin-bottom: var(--space-lg);">Send a Message</h2>
-                    <form class="contact-form" action="https://formspree.io/f/your-form-id" method="POST">
+                    <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                        <input type="hidden" name="form-name" value="contact">
+                        <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
                         <div class="form-group">
                             <label for="name">Your Name</label>
                             <input type="text" id="name" name="name" required>
@@ -162,6 +172,37 @@
         </div>
     </section>
     
+    <script>
+    // GA4: Track form submissions
+    const contactForm = document.querySelector('form[name="contact"]');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'Contact',
+            event_label: 'Contact Form Submission'
+          });
+        }
+      });
+    }
+    // GA4: Track phone clicks
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'contact', { event_category: 'Phone', event_label: 'Phone Click' });
+        }
+      });
+    });
+    // GA4: Track email clicks
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'contact', { event_category: 'Email', event_label: 'Email Click' });
+        }
+      });
+    });
+    </script>
+
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container footer-grid">
@@ -196,7 +237,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>© 2024 MyGeekPC. All rights reserved.</span>
+            <span>© 2026 MyGeekPC. All rights reserved.</span>
             <span>Idyllwild • Pine Cove • San Diego • Remote</span>
         </div>
     </footer>
